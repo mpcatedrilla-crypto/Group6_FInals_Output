@@ -24,8 +24,8 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        Event::factory()->count(25)->create();
-        Participant::factory()->count(50)->create();
+        Event::factory()->count(8)->create();
+        Participant::factory()->count(20)->create();
 
         $eventIds = Event::query()->pluck('id');
         $participantIds = Participant::query()->pluck('id');
@@ -33,8 +33,9 @@ class DatabaseSeeder extends Seeder
         $seen = [];
         $batch = [];
         $now = now();
+        $target = 120;
 
-        while (count($batch) < 1000) {
+        while (count($batch) < $target) {
             $eventId = $eventIds->random();
             $participantId = $participantIds->random();
             $key = $eventId.'-'.$participantId;

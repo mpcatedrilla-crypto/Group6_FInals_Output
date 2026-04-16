@@ -20,11 +20,4 @@ class EventController extends Controller
 
         return response()->json($events);
     }
-
-    public function show(Event $event): JsonResponse
-    {
-        $event->load(['registrations.participant']);
-
-        return response()->json($event);
-    }
 }

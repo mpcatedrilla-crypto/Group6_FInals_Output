@@ -14,5 +14,4 @@ Route::middleware('auth.basic')->group(function (): void {
     Route::post('/v1/logout', [AuthController::class, 'logout']);
 
     Route::get('/v1/events', [EventController::class, 'index']);
-    Route::get('/v1/events/{event}', [EventController::class, 'show']);
 });
