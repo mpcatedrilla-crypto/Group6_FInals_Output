@@ -1,17 +1,8 @@
-# Group 6 — Laravel API (in progress)
+# Group 6 API (WIP)
 
-**Status:** not final — mid-term progress for instructor review.
+Not finished. Laravel keeps many folders (`config`, `vendor`, …) — that is normal. Our code is mostly `app/Http/Controllers/Api`, `routes/api.php`, `database/`.
 
-**Done so far**
-- HTTP Basic Auth on protected routes (`auth.basic`).
-- `GET /api/health` (public).
-- `GET /api/v1/me`, `POST /api/v1/logout`.
-- `GET /api/v1/events` (paginated list with registration counts).
-
-**Still to do (before submission)**
-- `GET /api/v1/events/{id}` with registrations and participants.
-- Grow seeded data toward the course requirement (1000+ rows in `registrations`).
-- Polish and presentation run-through.
+Done: Basic Auth, `/api/health`, `/api/v1/me`, `/api/v1/logout`, `/api/v1/events` (list only). Todo: single event route, more seed rows, final polish.
 
 ```bash
 composer install
@@ -21,8 +12,4 @@ php artisan migrate:fresh --seed
 php artisan serve
 ```
 
-Demo user: `group6@ccc.edu.ph` / `group6-password` — current seed has **120** registration rows (placeholder volume).
-
-`GET /api/health` is public; other `/api/v1/*` routes use Basic Auth.
-
-Git hooks: `powershell -File scripts/setup-git-hooks.ps1`
+User `group6@ccc.edu.ph` / `group6-password`. Co-authors: `git config core.hooksPath .githooks` after clone.
