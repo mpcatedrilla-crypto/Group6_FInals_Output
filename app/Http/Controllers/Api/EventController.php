@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    /** List events (protected — requires Basic Auth on every request). */
     public function index(Request $request): JsonResponse
     {
         $perPage = min(max((int) $request->query('per_page', 15), 1), 100);
@@ -22,7 +21,6 @@ class EventController extends Controller
         return response()->json($events);
     }
 
-    /** Single event with registrations and each participant (Eloquent relationships). */
     public function show(Event $event): JsonResponse
     {
         $event->load(['registrations.participant']);

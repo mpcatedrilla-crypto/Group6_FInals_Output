@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    /** Who am I? (proves Basic Auth succeeded — `users.email` + password matched.) */
     public function me(Request $request): JsonResponse
     {
         $user = $request->user();
@@ -24,10 +23,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * There is no server “logout” for Basic Auth — explain this during the demo.
-     * The client simply stops sending the Authorization header.
-     */
     public function logout(): JsonResponse
     {
         return response()->json([
