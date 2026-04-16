@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Event;
-use App\Models\Participant;
-use App\Models\Registration;
+use App\Models\DemoRecord;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,7 +14,7 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        User::query()->updateOrCreate(
+        $user = User::query()->updateOrCreate(
             ['email' => 'group6@ccc.edu.ph'],
             [
                 'name' => 'Group 6 API User',
@@ -24,37 +22,21 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        Event::factory()->count(25)->create();
-        Participant::factory()->count(50)->create();
+        DemoRecord::query()->where('user_id', $user->id)->delete();
 
-        $eventIds = Event::query()->pluck('id');
-        $participantIds = Participant::query()->pluck('id');
-
-        $seen = [];
-        $batch = [];
         $now = now();
-        $target = 1000;
-
-        while (count($batch) < $target) {
-            $eventId = $eventIds->random();
-            $participantId = $participantIds->random();
-            $key = $eventId.'-'.$participantId;
-            if (isset($seen[$key])) {
-                continue;
-            }
-            $seen[$key] = true;
+        $batch = [];
+        for ($i = 1; $i <= 1000; $i++) {
             $batch[] = [
-                'event_id' => $eventId,
-                'participant_id' => $participantId,
-                'status' => fake()->randomElement(['confirmed', 'waitlist', 'cancelled']),
-                'notes' => fake()->optional(0.2)->sentence(),
+                'user_id' => $user->id,
+                'label' => 'Demo row '.$i,
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
         }
 
         foreach (array_chunk($batch, 250) as $chunk) {
-            Registration::query()->insert($chunk);
+            DemoRecord::query()->insert($chunk);
         }
     }
 }

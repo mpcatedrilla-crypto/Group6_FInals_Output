@@ -1,6 +1,6 @@
-# Group 6 Finals — Event Management API (Laravel)
+# Group 6 Finals — HTTP Basic Authentication API (Laravel)
 
-Course project: **HTTP Basic Authentication** only (no bearer tokens or OAuth for the graded auth method).
+Course focus: **HTTP Basic Authentication** only (no bearer tokens or OAuth for the graded auth method). This repository demonstrates that flow; the only protected “resource” routes are generic demo rows so the project still meets the course **1,000+ database rows** and **Eloquent relationships** requirements without building an event-management product.
 
 ## Git branches
 
@@ -23,9 +23,9 @@ Every commit in this repository is intended to list all members as [GitHub co-au
 ## Requirements covered
 
 - **Authentication:** Laravel `auth.basic` middleware (`Illuminate\Auth\Middleware\AuthenticateWithBasicAuth`). The client sends `Authorization: Basic base64(email:password)` on each request to protected routes.
-- **API:** REST-style JSON under `/api`, with routing in `routes/api.php`.
-- **Eloquent:** `Event`, `Participant`, `Registration` models with `hasMany` / `belongsTo` relationships.
-- **Data volume:** Seeder creates **1,000** `registrations` rows (plus sample events and participants). Run `php artisan migrate:fresh --seed`.
+- **API:** JSON routes under `/api`, defined in `routes/api.php`.
+- **Eloquent:** `User` `hasMany` `DemoRecord`; `DemoRecord` `belongsTo` `User`.
+- **Data volume:** Seeder creates **1,000** `demo_records` rows for the demo user. Run `php artisan migrate:fresh --seed`.
 
 ## Quick start
 
@@ -49,9 +49,7 @@ php artisan serve
 | GET | `/api/health` | Public |
 | GET | `/api/v1/me` | Basic |
 | POST | `/api/v1/logout` | Basic (informational; see JSON body) |
-| GET | `/api/v1/events` | Basic |
-| GET | `/api/v1/events/{id}` | Basic |
-| POST | `/api/v1/events` | Basic |
+| GET | `/api/v1/demo-records` | Basic (paginated rows for the authenticated user) |
 
 **Example (curl):**
 
