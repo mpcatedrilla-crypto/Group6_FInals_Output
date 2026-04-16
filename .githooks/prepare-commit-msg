@@ -1,0 +1,24 @@
+#!/bin/sh
+# Appends Co-authored-by trailers so GitHub attributes the commit to the whole group.
+# Requires: git config core.hooksPath .githooks
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+
+if [ "$COMMIT_SOURCE" = "merge" ] || [ "$COMMIT_SOURCE" = "squash" ]; then
+  exit 0
+fi
+
+if grep -q "Co-authored-by: Jwelynie123" "$COMMIT_MSG_FILE" 2>/dev/null; then
+  exit 0
+fi
+
+cat >> "$COMMIT_MSG_FILE" <<'EOF'
+
+Co-authored-by: Jwelynie123 <dgperez@ccc.edu.ph>
+Co-authored-by: tzahhhahaha <jaamado@ccc.edu.ph>
+Co-authored-by: yumaki00 <abbayanban@ccc.edu.ph>
+Co-authored-by: mpcatedrilla <mpcatedrilla@ccc.edu.ph>
+Co-authored-by: markmasongsong <mcmasongsong@ccc.edu.ph>
+Co-authored-by: rayvenedburato <reburato@ccc.edu.ph>
+EOF
