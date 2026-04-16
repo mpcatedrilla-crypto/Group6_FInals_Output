@@ -8,13 +8,14 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    /** Who am I? (proves Basic Auth succeeded — `users.email` + password matched.) */
     public function me(Request $request): JsonResponse
     {
         $user = $request->user();
 
         return response()->json([
             'authenticated' => true,
-            'auth' => 'http_basic',
+            'scheme' => 'HTTP Basic',
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -23,11 +24,14 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * There is no server “logout” for Basic Auth — explain this during the demo.
+     * The client simply stops sending the Authorization header.
+     */
     public function logout(): JsonResponse
     {
         return response()->json([
-            'message' => 'HTTP Basic Authentication does not use a server-side session or token. '
-                .'Stop sending the Authorization header (or clear stored credentials in your client) to end access.',
+            'message' => 'No session to destroy. Basic Auth sends credentials on each request; remove the Authorization header in your client to stop.',
         ]);
     }
 }

@@ -1,11 +1,16 @@
-# Group 6 Finals — HTTP Basic Authentication API (Laravel)
+# Group 6 — Event API (HTTP Basic Authentication)
 
-Course focus: **HTTP Basic Authentication** only (no bearer tokens or OAuth for the graded auth method). This repository demonstrates that flow; the only protected “resource” routes are generic demo rows so the project still meets the course **1,000+ database rows** and **Eloquent relationships** requirements without building an event-management product.
+Laravel API for the course requirement: **HTTP Basic Authentication** only. Event listings are the sample domain so you can show **routing**, **Eloquent** (`Event` → `Registration` → `Participant`), and **1,000+ rows** (`registrations`).
 
-## Git branches
+## How Basic Authentication works here (say this in the demo)
 
-- `main` — stable, presentation-ready snapshot.
-- `develop` — integration branch for ongoing work before merging to `main`.
+1. **Client** sends a header on **every** protected request:  
+   `Authorization: Basic <base64(email:password)>`
+2. **Laravel** runs the `auth.basic` middleware (`AuthenticateWithBasicAuth`). It decodes the header and checks the `users` table: **email** must match a row and **password** must pass `Hash::check` (stored as bcrypt).
+3. If it fails → **401** with a `WWW-Authenticate: Basic` challenge. If it succeeds → `$request->user()` is the `User` model and the controller runs.
+4. **No login token** and **no server session** for this method. “Logout” means the **client stops sending** the header (see `/api/v1/logout` JSON message).
+
+That is the whole story; keep the explanation short and point to `routes/api.php` and the `auth.basic` middleware.
 
 ## Team (CCC)
 
@@ -18,16 +23,15 @@ Course focus: **HTTP Basic Authentication** only (no bearer tokens or OAuth for 
 | markmasongsong | mcmasongsong@ccc.edu.ph |
 | rayvenedburato | reburato@ccc.edu.ph |
 
-Every commit in this repository is intended to list all members as [GitHub co-authors](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors) via a shared `prepare-commit-msg` hook. Run `powershell -File scripts/setup-git-hooks.ps1` once after cloning.
+Co-author hook: run `powershell -File scripts/setup-git-hooks.ps1` once after clone.
 
-## Requirements covered
+## Git branches
 
-- **Authentication:** Laravel `auth.basic` middleware (`Illuminate\Auth\Middleware\AuthenticateWithBasicAuth`). The client sends `Authorization: Basic base64(email:password)` on each request to protected routes.
-- **API:** JSON routes under `/api`, defined in `routes/api.php`.
-- **Eloquent:** `User` `hasMany` `DemoRecord`; `DemoRecord` `belongsTo` `User`.
-- **Data volume:** Seeder creates **1,000** `demo_records` rows for the demo user. Run `php artisan migrate:fresh --seed`.
+- `main` — presentation snapshot  
+- `develop` — integration  
+- `feature/integration-flow` — feature work  
 
-## Quick start
+## Run locally
 
 ```bash
 composer install
@@ -37,33 +41,29 @@ php artisan migrate:fresh --seed
 php artisan serve
 ```
 
-### Demo API user (after seeding)
+### Seeded API user
 
-- **Email:** `group6@ccc.edu.ph`
-- **Password:** `group6-password`
+- **Email:** `group6@ccc.edu.ph`  
+- **Password:** `group6-password`  
+
+After seeding you should have **1,000** rows in `registrations`.
 
 ### Endpoints
 
 | Method | Path | Auth |
 |--------|------|------|
-| GET | `/api/health` | Public |
+| GET | `/api/health` | None |
 | GET | `/api/v1/me` | Basic |
-| POST | `/api/v1/logout` | Basic (informational; see JSON body) |
-| GET | `/api/v1/demo-records` | Basic (paginated rows for the authenticated user) |
+| POST | `/api/v1/logout` | Basic (explains client-side “logout”) |
+| GET | `/api/v1/events` | Basic (paginated) |
+| GET | `/api/v1/events/{id}` | Basic (event + registrations + participants) |
 
-**Example (curl):**
+**Try:**
 
 ```bash
 curl -u "group6@ccc.edu.ph:group6-password" http://127.0.0.1:8000/api/v1/me
 ```
 
-## Presentation notes (Basic Auth)
-
-- **Flow:** Browser or API client encodes `email:password` in Base64 and sends it on every protected request. Laravel validates against the `users` table (`email` + hashed `password`). There is no server session or refresh token for this method.
-- **Logout:** Clearing credentials is a client responsibility (stop sending the header). The `/api/v1/logout` route returns a short explanation in JSON.
-- **Strengths:** Simple to implement and debug; works well with tools like Postman; no token storage on the server.
-- **Weaknesses:** Credentials are re-sent on every request; Base64 is not encryption (always use HTTPS); no fine-grained revocation without changing passwords.
-
 ## License
 
-Application code by Group 6 for academic use. Laravel framework is open-source software licensed under the MIT license.
+Group 6 coursework. Laravel is MIT licensed.

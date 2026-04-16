@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\DemoRecord;
+use App\Models\Event;
+use App\Models\Participant;
+use App\Models\Registration;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,7 +16,7 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        $user = User::query()->updateOrCreate(
+        User::query()->updateOrCreate(
             ['email' => 'group6@ccc.edu.ph'],
             [
                 'name' => 'Group 6 API User',
@@ -22,21 +24,36 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        DemoRecord::query()->where('user_id', $user->id)->delete();
+        Event::factory()->count(25)->create();
+        Participant::factory()->count(50)->create();
 
-        $now = now();
+        $eventIds = Event::query()->pluck('id');
+        $participantIds = Participant::query()->pluck('id');
+
+        $seen = [];
         $batch = [];
-        for ($i = 1; $i <= 1000; $i++) {
+        $now = now();
+
+        while (count($batch) < 1000) {
+            $eventId = $eventIds->random();
+            $participantId = $participantIds->random();
+            $key = $eventId.'-'.$participantId;
+            if (isset($seen[$key])) {
+                continue;
+            }
+            $seen[$key] = true;
             $batch[] = [
-                'user_id' => $user->id,
-                'label' => 'Demo row '.$i,
+                'event_id' => $eventId,
+                'participant_id' => $participantId,
+                'status' => fake()->randomElement(['confirmed', 'waitlist', 'cancelled']),
+                'notes' => fake()->optional(0.2)->sentence(),
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
         }
 
         foreach (array_chunk($batch, 250) as $chunk) {
-            DemoRecord::query()->insert($chunk);
+            Registration::query()->insert($chunk);
         }
     }
 }
