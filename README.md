@@ -2,6 +2,11 @@
 
 Course project: **HTTP Basic Authentication** only (no bearer tokens or OAuth for the graded auth method).
 
+## Git branches
+
+- `main` — stable, presentation-ready snapshot.
+- `develop` — integration branch for ongoing work before merging to `main`.
+
 ## Team (CCC)
 
 | GitHub | Email |
