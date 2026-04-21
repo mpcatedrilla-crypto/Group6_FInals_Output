@@ -1,0 +1,398 @@
+{
+  "info": {
+    "name": "Group 6 - Events API (Basic Auth)",
+    "description": "Events Management API with HTTP Basic Authentication\n\nDefault Credentials:\n- Username: admin@example.com\n- Password: password123\n\nTotal Records: 1,111 (100 events + 1000 participants)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "item": [
+    {
+      "name": "1. Auth Test",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/auth-test",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "auth-test"]
+        },
+        "description": "Test Basic Authentication credentials"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Basic Auth successful', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql('Basic Authentication successful');",
+              "    pm.expect(jsonData.auth_method).to.eql('HTTP Basic Authentication');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Get All Events (100)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/events",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "events"]
+        },
+        "description": "Retrieve all 100 events from database"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Got 100 events', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.lengthOf(100);",
+              "    console.log('Total events:', jsonData.length);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Get Single Event",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/events/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "events", "1"]
+        },
+        "description": "Get event #1 with participants"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Create Event",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"New Event from Postman\",\n    \"description\": \"Created during API demo\",\n    \"event_date\": \"2024-12-25\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/events",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "events"]
+        },
+        "description": "Create a new event"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Event created successfully', function () {",
+              "    pm.response.to.have.status(201);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.eql('Event created successfully');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Update Event",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Updated Event Title\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/events/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "events", "1"]
+        },
+        "description": "Update event #1"
+      },
+      "response": []
+    },
+    {
+      "name": "6. Delete Event",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/events/101",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "events", "101"]
+        },
+        "description": "Delete event #101"
+      },
+      "response": []
+    },
+    {
+      "name": "7. Get All Participants (1000)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/participants",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "participants"]
+        },
+        "description": "Retrieve all 1000 participants from database"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Got 1000 participants', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.lengthOf(1000);",
+              "    console.log('Total participants:', jsonData.length);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Get Single Participant",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/participants/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "participants", "1"]
+        },
+        "description": "Get participant #1 with event info"
+      },
+      "response": []
+    },
+    {
+      "name": "9. Get Participants by Event",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/participants/event/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "participants", "event", "1"]
+        },
+        "description": "Get all participants for event #1"
+      },
+      "response": []
+    },
+    {
+      "name": "10. Create Participant",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe.new@example.com\",\n    \"event_id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/participants",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "participants"]
+        },
+        "description": "Register new participant for event"
+      },
+      "response": []
+    },
+    {
+      "name": "11. Update Participant",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Updated Name\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/participants/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "participants", "1"]
+        },
+        "description": "Update participant #1"
+      },
+      "response": []
+    },
+    {
+      "name": "12. Delete Participant",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/participants/1001",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "participants", "1001"]
+        },
+        "description": "Delete participant #1001"
+      },
+      "response": []
+    },
+    {
+      "name": "13. Test Without Auth (Should Fail)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/api/events",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "events"]
+        },
+        "description": "This should return 401 Unauthorized - demonstrates auth protection"
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Returns 401 without auth', function () {",
+              "    pm.response.to.have.status(401);",
+              "});",
+              "",
+              "pm.test('Error message correct', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.contain('Unauthorized');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "admin@example.com",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "password123",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Apply Basic Auth to all requests",
+          "pm.request.auth = {",
+          "    type: 'basic',",
+          "    basic: {",
+          "        username: 'admin@example.com',",
+          "        password: 'password123'",
+          "    }",
+          "};"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "username",
+      "value": "admin@example.com",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "password123",
+      "type": "string"
+    }
+  ]
+}
