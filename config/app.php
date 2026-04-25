@@ -34,7 +34,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Laravel\Sanctum\SanctumServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
